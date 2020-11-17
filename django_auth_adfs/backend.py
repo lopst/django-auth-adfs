@@ -9,6 +9,8 @@ from django.core.exceptions import ImproperlyConfigured, PermissionDenied, Objec
 from django_auth_adfs import signals
 from django_auth_adfs.config import settings, provider_config
 
+from django.conf import settings as django_settings
+
 logger = logging.getLogger("django_auth_adfs")
 
 
@@ -121,7 +123,8 @@ class AdfsBaseBackend(ModelBackend):
         username_claim = settings.USERNAME_CLAIM
         usermodel = get_user_model()
         user, created = usermodel.objects.get_or_create(**{
-            usermodel.USERNAME_FIELD: claims[username_claim]
+            #usermodel.USERNAME_FIELD: claims[username_claim]
+            usermodel.USERNAME_FIELD: django_settings.ADFS_CLIENT_NAME + "_" + claims[username_claim]
         })
         if created or not user.password:
             user.set_unusable_password()

@@ -29,7 +29,8 @@ class OAuth2CallbackView(View):
                 'error_message': "No authorization code was provided.",
             }, status=400)
 
-        redirect_to = request.GET.get("state")
+        # use always the setted configuration
+        redirect_to = None # request.GET.get("state")
 
         user = authenticate(request=request, authorization_code=code)
 
